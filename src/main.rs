@@ -4,41 +4,45 @@ mod lib{
     pub mod lib;
 }
 use lib::board::Board;
-use lib::lib::screen_clear;
+use lib::lib::{screen_clear, wait_for_enter};
 
-// const SUDOKU_TABLE: &str = "
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-//     0 0 0 0 0 0 0 0 0
-// ";
 const SUDOKU_TABLE: &str = "
-    0 0 1 0 0 2 4 6 0
-    6 0 0 0 0 5 0 1 8
-    8 2 0 9 1 0 6 0 0
-    0 0 8 0 4 0 5 0 0
-    1 0 0 8 0 0 0 6 9
-    0 0 0 0 0 8 2 7 0
-    5 1 4 7 3 0 6 2 0
-    3 0 7 0 2 4 0 0 0
-    0 2 0 0 1 3 7 0 0
+0 0 0 0 0 0 0 9 0
+0 4 0 0 2 1 0 0 0
+8 0 0 0 0 0 0 7 0
+0 0 6 0 0 0 0 0 0
+9 0 0 0 0 3 0 0 0
+0 2 0 0 5 0 6 0 0
+2 0 0 6 3 0 0 0 0
+0 0 5 0 7 0 0 0 0
+0 0 0 0 0 0 1 8 0
 ";
 
 
 fn main() {
 
-    let mut sudoku = Board::new(true);
+    let mut sudoku = Board::new(
+        Some(true),
+        Some(false),
+        );
     
     println!("Reading matrix");
+    sudoku.add_debug((6, 8));
+
     sudoku.from_text_matrix(SUDOKU_TABLE.to_string(), '0');
 
     screen_clear();
-    println!("Final cofiguration");
-    sudoku.pretty_print();
+    println!("Input matrix loaded");
+    sudoku.pretty_print(None);
+    
+    
+    println!("Starting solving");
+    wait_for_enter();
+    
+    sudoku.collapse_all();
+    
+    println!("Final configuration");
+    screen_clear();
+    sudoku.pretty_print(None);
 
 }
